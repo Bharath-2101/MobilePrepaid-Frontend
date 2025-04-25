@@ -1,0 +1,18 @@
+.hided {
+  display: none;
+}
+.transition-form {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  pointer-events: none;
+  position: absolute;
+  width: 100%;
+}
+
+.transition-form.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  position: relative;
+}
