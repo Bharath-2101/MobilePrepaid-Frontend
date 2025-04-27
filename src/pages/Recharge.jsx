@@ -121,7 +121,6 @@ const Recharge = () => {
   return (
     <div>
       <div className="main min-h-screen bg-orange-500">
-        {/* Header */}
         <div className="h-40 sm:h-56 w-full flex flex-col justify-center items-center font-black text-white relative">
           <h1 className="text-xl sm:text-4xl">RECHARGE PLANS</h1>
           <div className="flex gap-4 mt-4">
@@ -140,9 +139,7 @@ const Recharge = () => {
           </div>
         </div>
 
-        {/* Main content */}
-        <div className="max-w-7xl mt-0 sm:mx-auto px-4 grid md:grid-cols-3 gap-8">
-          {/* Left Section */}
+        <div className="max-w-7xl mt-0 sm:mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="bg-white p-6 rounded-xl shadow-md flex flex-col gap-4">
             <h2 className="text-md sm:text-xl font-black text-center">
               Mobile Recharge
@@ -162,13 +159,12 @@ const Recharge = () => {
             </div>
             <button
               onClick={handleProceed}
-              className="bg-orange-400 rounded-lg font-black text-md sm:text-xl px-2 py-1 mt-3 text-gray-800 mb-4 w-1/2 hover:scale-110 shadow-xl mx-auto"
+              className="bg-orange-400 rounded-lg font-black text-md sm:text-xl px-2 py-1 mt-3 text-gray-800 mb-4 w-1/2 sm:w-3/4 md:w-1/2 hover:scale-110 shadow-xl mx-auto"
             >
               Proceed
             </button>
           </div>
 
-          {/* Right Section */}
           <div className="md:col-span-2 bg-white p-6 rounded-xl shadow-md text-center">
             <div className="flex justify-evenly pb-4">
               {["POPULAR", "UNLIMITED", "DATA"].map((type) => (
@@ -188,7 +184,7 @@ const Recharge = () => {
                 <div
                   key={plan.id}
                   onClick={handlePlanClick}
-                  className="flex flex-wrap md:flex-nowrap items-center justify-between gap-4 py-2 text-sm sm:text-lg border rounded-xl px-4 cursor-pointer"
+                  className="flex flex-wrap md:flex-nowrap items-center justify-between gap-5 py-2 text-sm sm:text-lg border rounded-xl px-4 cursor-pointer"
                 >
                   <span className="min-w-[100px] font-medium">{plan.name}</span>
                   <span className="flex-1 text-gray-600">
@@ -207,7 +203,6 @@ const Recharge = () => {
         </div>
       </div>
 
-      {/* Confirmation Pop-up */}
       <div className="hide pop min-h-screen">
         <div className="pops proceed flex flex-col gap-4">
           <h1 className="text-lg sm:text-2xl font-black text-orange-500">
@@ -243,7 +238,7 @@ const Recharge = () => {
             </div>
             <button
               type="submit"
-              className="bg-orange-400 rounded-lg font-black text-md sm:text-xl px-2 py-1 mt-3 text-gray-800 mb-4 w-1/2 hover:scale-110 shadow-xl mx-auto"
+              className="bg-orange-400 rounded-lg font-black text-md sm:text-xl px-2 py-1 mt-3 text-gray-800 mb-4 w-1/2 sm:w-3/4 md:w-1/2 hover:scale-110 shadow-xl mx-auto"
             >
               Continue
             </button>
