@@ -11,7 +11,6 @@ const Recharge = () => {
   const userName = localStorage.getItem("name");
   const userMobile = localStorage.getItem("mobile");
 
-  // Fetch all plans initially
   useEffect(() => {
     const fetchPlans = async () => {
       try {
@@ -26,14 +25,12 @@ const Recharge = () => {
     fetchPlans();
   }, []);
 
-  // Logout function
   const handleLogout = () => {
     localStorage.clear();
     navigate("/");
     showToast("Logged out successfully", "green");
   };
 
-  // Plan selection logic
   const handlePlanClick = (e) => {
     const planDiv = e.currentTarget;
     const planName = planDiv.querySelector("span")?.textContent;

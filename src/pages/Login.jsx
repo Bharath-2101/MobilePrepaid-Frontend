@@ -13,8 +13,6 @@ const Login = () => {
     email: "",
     password: "",
   });
-
-  // Clear any existing session when component mounts
   useEffect(() => {
     localStorage.clear();
   }, []);
@@ -67,9 +65,7 @@ const Login = () => {
           <hr className="mt-2 border-t-2 border-black w-3/4 mx-auto" />
         </div>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-          {/* Mobile Input */}
           <div className="flex flex-col items-center gap-2">
             <label className="text-sm sm:text-base font-bold text-gray-700">
               Enter the Registered Number
@@ -95,7 +91,6 @@ const Login = () => {
             </div>
           </div>
 
-          {/* Email Field */}
           <div className="flex flex-col gap-1">
             <label className="text-sm sm:text-base font-bold text-gray-700">
               Your Email:
@@ -110,7 +105,6 @@ const Login = () => {
             />
           </div>
 
-          {/* Password Field */}
           <div className="flex flex-col gap-1">
             <label className="text-sm sm:text-base font-bold text-gray-700">
               Password:
@@ -125,7 +119,6 @@ const Login = () => {
             />
           </div>
 
-          {/* Submit Button */}
           <div className="flex justify-center">
             <button
               type="submit"
@@ -136,7 +129,6 @@ const Login = () => {
           </div>
         </form>
 
-        {/* Register Link */}
         <div className="text-center text-sm sm:text-base">
           New User?{" "}
           <a

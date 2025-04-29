@@ -67,7 +67,6 @@ const Register = () => {
           onSubmit={handleSubmit}
           className="w-full flex flex-col gap-6 items-center"
         >
-          {/* Mobile number input */}
           <div className="flex w-full gap-3 items-center justify-center">
             <input
               type="text"
@@ -87,7 +86,6 @@ const Register = () => {
             />
           </div>
 
-          {/* Name input */}
           <div className="w-full flex flex-col sm:flex-row items-center gap-3">
             <label className="w-full sm:w-1/4 text-sm sm:text-lg font-bold text-gray-700 text-center sm:text-left">
               Name:
@@ -103,7 +101,6 @@ const Register = () => {
             />
           </div>
 
-          {/* Email input */}
           <div className="w-full flex flex-col sm:flex-row items-center gap-3">
             <label className="w-full sm:w-1/4 text-sm sm:text-lg font-bold text-gray-700 text-center sm:text-left">
               Email:
@@ -119,7 +116,6 @@ const Register = () => {
             />
           </div>
 
-          {/* Password input */}
           <div className="w-full flex flex-col sm:flex-row items-center gap-3">
             <label className="w-full sm:w-1/4 text-sm sm:text-lg font-bold text-gray-700 text-center sm:text-left">
               Password:
@@ -135,7 +131,6 @@ const Register = () => {
             />
           </div>
 
-          {/* Submit button */}
           <button
             type="submit"
             className="bg-orange-400 text-gray-800 font-extrabold text-lg sm:text-xl rounded-lg px-6 py-2 mt-2 hover:scale-105 transition-transform shadow-md"
@@ -144,7 +139,6 @@ const Register = () => {
           </button>
         </form>
 
-        {/* Navigation link */}
         <div className="text-center text-sm sm:text-base">
           Already have an account?{" "}
           <a href="/" className="text-orange-500 font-semibold underline">

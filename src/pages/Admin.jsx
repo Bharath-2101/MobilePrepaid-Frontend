@@ -33,6 +33,10 @@ const Admin = () => {
     navigate(`/userhistory/${mobile}`);
   };
 
+  const handleClick = () => {
+    navigate("/admin/addplan");
+  };
+
   const handleLogout = () => {
     localStorage.clear();
     showToast("Logged out successfully", "green");
@@ -41,13 +45,19 @@ const Admin = () => {
 
   return (
     <div className="min-h-screen bg-orange-500 px-4 sm:px-10 py-6">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex  items-center mb-6">
         <h1 className="text-xl sm:text-2xl font-bold text-white">
           Admin Dashboard
         </h1>
         <button
+          onClick={handleClick}
+          className="bg-black text-white ml-auto text-sm sm:text-lg px-4 py-2 rounded-xl hover:bg-gray-800 transition-colors shadow-md"
+        >
+          Add Plan
+        </button>
+        <button
           onClick={handleLogout}
-          className="bg-black text-white text-sm sm:text-lg px-4 py-2 rounded-xl hover:bg-gray-800 transition-colors shadow-md"
+          className="bg-black text-white text-sm sm:text-lg px-4 py-2 rounded-xl ml-2 sm:ml-5 hover:bg-gray-800 transition-colors shadow-md"
         >
           Log Out
         </button>

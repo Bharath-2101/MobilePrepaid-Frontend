@@ -58,7 +58,6 @@ const RechargeHistory = () => {
 
   return (
     <div className="min-h-screen bg-orange-500 flex flex-col">
-      {/* Header */}
       <div className="py-6 sm:py-12 text-white text-center relative">
         <h1 className="text-2xl sm:text-4xl font-black">Recharge History</h1>
         <div className="flex justify-center gap-4 mt-4">
@@ -77,9 +76,8 @@ const RechargeHistory = () => {
         </div>
       </div>
 
-      {/* History Content */}
       <div className="bg-white rounded-t-3xl px-4 sm:px-12 py-6 grow">
-        {/* Grid Header */}
+  
         <div className="hidden sm:grid grid-cols-[1fr_1fr_1fr_1fr_50px] gap-4 font-bold text-gray-700 text-center pb-3 border-b-2 border-gray-300">
           <div>Plan Name</div>
           <div>Payment Mode</div>
@@ -88,7 +86,6 @@ const RechargeHistory = () => {
           <div>Status</div>
         </div>
 
-        {/* History Items */}
         {historys.length === 0 ? (
           <div className="text-center text-gray-600 font-medium mt-6">
             No recharge history found.

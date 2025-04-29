@@ -6,6 +6,7 @@ import Recharge from "./pages/Recharge";
 import RechargeHistory from "./pages/RechargeHistory";
 import Admin from "./pages/Admin";
 import UserHistory from "./pages/UserHistory";
+import AddPlan from "./pages/AddPlan";
 const App = () => {
   return (
     <div>
@@ -17,6 +18,7 @@ const App = () => {
           <Route path="/recharge" element={<Recharge />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/userhistory/:mobile" element={<UserHistory />} />
+          <Route path="/admin/addplan" element={<AddPlan />} />
         </Routes>
       </BrowserRouter>
     </div>

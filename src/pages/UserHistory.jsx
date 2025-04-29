@@ -22,13 +22,12 @@ const UserHistory = () => {
   };
 
   const handleBackClick = () => {
-    navigate(-1); // Go back to previous page
+    navigate(-1);
   };
 
   useEffect(() => {
     const fetchUserHistory = async () => {
       try {
-        // First fetch user details
         const userResp = await axios.get(
           `http://localhost:8080/users/${mobile}`,
           {
@@ -62,7 +61,6 @@ const UserHistory = () => {
 
   return (
     <div className="min-h-screen bg-orange-500 px-4 sm:px-10 py-6">
-      {/* Header with Back Button */}
       <div className="flex justify-between items-center mb-6">
         <button
           onClick={handleBackClick}
@@ -72,7 +70,6 @@ const UserHistory = () => {
         </button>
       </div>
 
-      {/* User Information */}
       {userDetails && (
         <div className="bg-white rounded-xl p-4 mb-6 shadow-md">
           <h2 className="text-xl font-bold mb-2">User Details</h2>
@@ -99,14 +96,12 @@ const UserHistory = () => {
         </div>
       )}
 
-      {/* Main Content */}
       <div className="text-center mb-6">
         <h1 className="text-2xl sm:text-3xl font-black text-white">
           Recharge History
         </h1>
       </div>
 
-      {/* History Table */}
       <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-lg">
         {loading ? (
           <div className="text-center py-8">
@@ -120,7 +115,6 @@ const UserHistory = () => {
           </div>
         ) : (
           <>
-            {/* Desktop Table Header */}
             <div className="hidden sm:grid grid-cols-[1fr_1fr_1fr_1fr_80px] gap-4 border-b pb-3 mb-4 font-bold text-gray-700 text-center">
               <div>Plan Name</div>
               <div>Payment Mode</div>
@@ -129,7 +123,6 @@ const UserHistory = () => {
               <div>Status</div>
             </div>
 
-            {/* History Items */}
             <div className="flex flex-col gap-4">
               {history.map((item) => (
                 <div
