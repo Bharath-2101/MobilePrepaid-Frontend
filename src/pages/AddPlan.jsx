@@ -33,7 +33,7 @@ const AddPlan = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const response = await axios.post(
-      "http://localhost:8080/admin/plans",
+      "http://ec2-3-109-154-195.ap-south-1.compute.amazonaws.com:8080/admin/plans",
       form,
       {
         headers: { Authorization: `Bearer ${token}` },

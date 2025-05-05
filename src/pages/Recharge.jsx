@@ -14,9 +14,12 @@ const Recharge = () => {
   useEffect(() => {
     const fetchPlans = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/plans", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await axios.get(
+          "http://ec2-3-109-154-195.ap-south-1.compute.amazonaws.com:8080/plans",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         setPlans(response.data);
       } catch (error) {
         console.error("Error fetching plans:", error);
@@ -58,22 +61,25 @@ const Recharge = () => {
 
     try {
       const userRes = await axios.get(
-        `http://localhost:8080/users/${userMobile}`,
+        `http://ec2-3-109-154-195.ap-south-1.compute.amazonaws.com:8080/users/${userMobile}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
 
-      const planRes = await axios.get("http://localhost:8080/plans/search", {
-        params: { value: planName },
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const planRes = await axios.get(
+        "http://ec2-3-109-154-195.ap-south-1.compute.amazonaws.com:8080/plans/search",
+        {
+          params: { value: planName },
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       const userId = userRes.data.id;
       const planId = planRes.data[0].id;
 
       const response = await axios.post(
-        "http://localhost:8080/recharge",
+        "http://ec2-3-109-154-195.ap-south-1.compute.amazonaws.com:8080/recharge",
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -103,7 +109,7 @@ const Recharge = () => {
   const handleCategoryClick = async (e) => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/plans/search?value=${e.target.value}`,
+        `http://ec2-3-109-154-195.ap-south-1.compute.amazonaws.com:8080/plans/search?value=${e.target.value}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }

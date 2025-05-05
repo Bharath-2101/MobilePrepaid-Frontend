@@ -14,7 +14,7 @@ const RechargeHistory = () => {
       try {
         const number = localStorage.getItem("mobile");
         const userResp = await axios.get(
-          `http://localhost:8080/users/${number}`,
+          `http://ec2-3-109-154-195.ap-south-1.compute.amazonaws.com:8080/users/${number}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -23,7 +23,7 @@ const RechargeHistory = () => {
         );
 
         const rechargeResp = await axios.get(
-          `http://localhost:8080/recharge/history/${userResp.data.id}`,
+          `http://ec2-3-109-154-195.ap-south-1.compute.amazonaws.com:8080/recharge/history/${userResp.data.id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -77,7 +77,6 @@ const RechargeHistory = () => {
       </div>
 
       <div className="bg-white rounded-t-3xl px-4 sm:px-12 py-6 grow">
-  
         <div className="hidden sm:grid grid-cols-[1fr_1fr_1fr_1fr_50px] gap-4 font-bold text-gray-700 text-center pb-3 border-b-2 border-gray-300">
           <div>Plan Name</div>
           <div>Payment Mode</div>

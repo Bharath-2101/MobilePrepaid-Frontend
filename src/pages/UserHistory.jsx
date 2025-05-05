@@ -29,7 +29,7 @@ const UserHistory = () => {
     const fetchUserHistory = async () => {
       try {
         const userResp = await axios.get(
-          `http://localhost:8080/users/${mobile}`,
+          `http://ec2-3-109-154-195.ap-south-1.compute.amazonaws.com:8080/users/${mobile}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -40,7 +40,7 @@ const UserHistory = () => {
 
         // Then fetch recharge history
         const historyResp = await axios.get(
-          `http://localhost:8080/recharge/history/${userResp.data.id}`,
+          `http://ec2-3-109-154-195.ap-south-1.compute.amazonaws.com:8080/recharge/history/${userResp.data.id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

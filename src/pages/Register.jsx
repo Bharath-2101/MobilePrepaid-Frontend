@@ -39,7 +39,7 @@ const Register = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/auth/register",
+        "http://ec2-3-109-154-195.ap-south-1.compute.amazonaws.com:8080/auth/register",
         form
       );
 

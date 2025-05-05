@@ -33,7 +33,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/auth/login",
+        "http://ec2-3-109-154-195.ap-south-1.compute.amazonaws.com:8080/auth/login",
         form
       );
 

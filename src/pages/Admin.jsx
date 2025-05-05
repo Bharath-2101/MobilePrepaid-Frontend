@@ -12,11 +12,14 @@ const Admin = () => {
   useEffect(() => {
     const loadUsers = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/admin", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axios.get(
+          "http://ec2-3-109-154-195.ap-south-1.compute.amazonaws.com:8080/admin",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         setHistory(response.data);
       } catch (err) {
         console.error("Failed to fetch expiring users", err);
