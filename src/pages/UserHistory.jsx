@@ -29,7 +29,7 @@ const UserHistory = () => {
     const fetchUserHistory = async () => {
       try {
         const userResp = await axios.get(
-          `http://localhost:8080/users/${mobile}`,
+          `${import.meta.env.VITE_API_URL}/users/${mobile}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -39,7 +39,9 @@ const UserHistory = () => {
         setUserDetails(userResp.data);
 
         const historyResp = await axios.get(
-          `http://localhost:8080/recharge/history/${userResp.data.id}`,
+          `${import.meta.env.VITE_API_URL}/recharge/history/${
+            userResp.data.id
+          }`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

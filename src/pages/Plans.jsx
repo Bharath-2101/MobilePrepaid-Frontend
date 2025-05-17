@@ -15,7 +15,7 @@ const Plans = () => {
     const fetchPlans = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/plans`,
+          `${import.meta.env.VITE_API_URL}/plans`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -54,7 +54,7 @@ const Plans = () => {
   const handleCategoryClick = async (e) => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/plans/search?value=${e.target.value}`,
+        `${import.meta.env.VITE_API_URL}/plans/search?value=${e.target.value}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }

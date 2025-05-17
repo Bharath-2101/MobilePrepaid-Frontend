@@ -14,7 +14,7 @@ const RechargeHistory = () => {
       try {
         const number = localStorage.getItem("mobile");
         const userResp = await axios.get(
-          `${process.env.REACT_APP_API_URL}/users/${number}`,
+          `${import.meta.env.VITE_API_URL}/users/${number}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -23,7 +23,9 @@ const RechargeHistory = () => {
         );
 
         const rechargeResp = await axios.get(
-          `${process.env.REACT_APP_API_URL}/recharge/history/${userResp.data.id}`,
+          `${import.meta.env.VITE_API_URL}/recharge/history/${
+            userResp.data.id
+          }`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

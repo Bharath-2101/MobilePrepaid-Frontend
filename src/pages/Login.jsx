@@ -5,7 +5,7 @@ import { showToast } from "../utils/toast";
 
 const Login = () => {
   const navigate = useNavigate();
-
+  console.log("API URL:", import.meta.env.VITE_API_URL);
   const [form, setForm] = useState({
     mobile: "",
     email: "",
@@ -28,7 +28,7 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/auth/login`,
+        `${import.meta.env.VITE_API_URL}/auth/login`,
         form
       );
       localStorage.setItem("userId", response.data.id);

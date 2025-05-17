@@ -30,7 +30,7 @@ const AddPlan = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const response = await axios.post(
-      `${process.env.REACT_APP_API_URL}/admin/plans`,
+      `${import.meta.env.VITE_API_URL}/admin/plans`,
       form,
       {
         headers: { Authorization: `Bearer ${token}` },

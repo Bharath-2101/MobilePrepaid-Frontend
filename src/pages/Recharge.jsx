@@ -28,7 +28,7 @@ const Recharge = () => {
 
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/plans/${planId}`,
+          `${import.meta.env.VITE_API_URL}/plans/${planId}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -85,7 +85,7 @@ const Recharge = () => {
 
     setSpin(true);
     const response = await axios.post(
-      `${process.env.REACT_APP_API_URL}/recharge`,
+      `${import.meta.env.VITE_API_URL}/recharge`,
       {},
       {
         headers: {
