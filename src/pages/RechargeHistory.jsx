@@ -14,7 +14,7 @@ const RechargeHistory = () => {
       try {
         const number = localStorage.getItem("mobile");
         const userResp = await axios.get(
-          `http://ec2-3-109-154-195.ap-south-1.compute.amazonaws.com:8080/users/${number}`,
+          `${process.env.REACT_APP_API_URL}/users/${number}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -23,7 +23,7 @@ const RechargeHistory = () => {
         );
 
         const rechargeResp = await axios.get(
-          `http://ec2-3-109-154-195.ap-south-1.compute.amazonaws.com:8080/recharge/history/${userResp.data.id}`,
+          `${process.env.REACT_APP_API_URL}/recharge/history/${userResp.data.id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -48,7 +48,7 @@ const RechargeHistory = () => {
   };
 
   const handleButtClick = () => {
-    navigate("/recharge");
+    navigate("/plans");
   };
 
   const handleLogout = () => {
@@ -57,27 +57,27 @@ const RechargeHistory = () => {
   };
 
   return (
-    <div className="min-h-screen bg-orange-500 flex flex-col">
-      <div className="py-6 sm:py-12 text-white text-center relative">
-        <h1 className="text-2xl sm:text-4xl font-black">Recharge History</h1>
+    <div className="min-h-screen bg-gray-100 flex flex-col">
+      <div className="py-6 text-white text-center bg-blue-600">
+        <h1 className="text-2xl font-bold">Recharge History</h1>
         <div className="flex justify-center gap-4 mt-4">
           <button
             onClick={handleButtClick}
-            className="bg-black text-white text-sm sm:text-lg px-5 py-2 sm:px-6 sm:py-3 rounded-lg hover:scale-105 transition-transform"
+            className="bg-white text-blue-600 px-5 py-2 rounded-md text-sm font-medium hover:bg-blue-50"
           >
             Recharge Plans
           </button>
           <button
             onClick={handleLogout}
-            className="bg-black text-white text-sm sm:text-lg px-5 py-2 sm:px-6 sm:py-3 rounded-lg hover:scale-105 transition-transform"
+            className="bg-white text-blue-600 px-5 py-2 rounded-md text-sm font-medium hover:bg-blue-50"
           >
             Logout
           </button>
         </div>
       </div>
 
-      <div className="bg-white rounded-t-3xl px-4 sm:px-12 py-6 grow">
-        <div className="hidden sm:grid grid-cols-[1fr_1fr_1fr_1fr_50px] gap-4 font-bold text-gray-700 text-center pb-3 border-b-2 border-gray-300">
+      <div className="bg-white rounded-t-lg px-4 py-6 grow shadow-sm">
+        <div className="hidden sm:grid grid-cols-[1fr_1fr_1fr_1fr_50px] gap-4 font-medium text-gray-700 text-center pb-3 border-b border-gray-200">
           <div>Plan Name</div>
           <div>Payment Mode</div>
           <div>Recharged Date</div>
@@ -93,27 +93,25 @@ const RechargeHistory = () => {
           historys.map((history) => (
             <div
               key={history.id}
-              className="my-4 p-4 rounded-xl bg-gray-100 flex flex-col sm:grid sm:grid-cols-[1fr_1fr_1fr_1fr_50px] gap-4 items-center text-center sm:text-left"
+              className="my-3 p-4 rounded-md bg-gray-50 flex flex-col sm:grid sm:grid-cols-[1fr_1fr_1fr_1fr_50px] gap-4 items-center text-center sm:text-left border border-gray-200"
             >
-              <div className="text-sm sm:text-base font-semibold">
+              <div className="text-sm font-medium text-center">
                 {history.plan.name}
               </div>
-              <div className="text-sm sm:text-base">
-                {history.paymentMethod}
-              </div>
-              <div className="text-sm sm:text-base">
+              <div className="text-sm text-center">{history.paymentMethod}</div>
+              <div className="text-sm text-center">
                 {new Date(history.rechargeDate).toLocaleDateString()}
               </div>
-              <div className="text-sm sm:text-base">
+              <div className="text-sm text-center">
                 {new Date(history.expiredDate).toLocaleDateString()}
               </div>
               <div
-                className={`flex justify-center items-center w-7 h-7 sm:w-8 sm:h-8 rounded-full ${
+                className={`flex  justify-center items-center w-7 h-7 rounded-full ${
                   isExpired(history.expiredDate) ? "bg-red-500" : "bg-green-500"
                 }`}
               >
                 {isExpired(history.expiredDate) ? (
-                  <ImCross className="text-white text-xs sm:text-sm" />
+                  <ImCross className="text-white text-xs" />
                 ) : (
                   <TiTick className="text-white text-sm" />
                 )}

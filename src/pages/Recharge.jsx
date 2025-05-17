@@ -1,253 +1,282 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { showToast } from "../utils/toast";
-import "../styles/recharge.css";
+import axios from "axios";
 
 const Recharge = () => {
-  const [plans, setPlans] = useState([]);
+  const [plan, setPlan] = useState({});
+  const [spin, setSpin] = useState(false);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const location = useLocation();
   const token = localStorage.getItem("token");
-  const userName = localStorage.getItem("name");
-  const userMobile = localStorage.getItem("mobile");
+  const [isCard, setIsCard] = useState(false);
+
+  const queryParams = new URLSearchParams(location.search);
+  const planId = queryParams.get("planId");
+
+  const [form, setForm] = useState({
+    userId: localStorage.getItem("userId"),
+    planId: planId,
+    paymentMethod: "UPI",
+    paymentDetails: "",
+  });
 
   useEffect(() => {
-    const fetchPlans = async () => {
+    const loadPlan = async () => {
+      if (!planId) return;
+
       try {
         const response = await axios.get(
-          "http://ec2-3-109-154-195.ap-south-1.compute.amazonaws.com:8080/plans",
+          `${process.env.REACT_APP_API_URL}/plans/${planId}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        setPlans(response.data);
+        setPlan(response.data);
+        setLoading(false);
       } catch (error) {
-        console.error("Error fetching plans:", error);
+        console.error("Error fetching plan:", error);
+        showToast("Failed to load plan details", "red");
+        setLoading(false);
       }
     };
-    fetchPlans();
-  }, []);
 
-  const handleLogout = () => {
-    localStorage.clear();
-    navigate("/");
-    showToast("Logged out successfully", "green");
+    loadPlan();
+  }, [planId, token]);
+
+  useEffect(() => {
+    if (plan?.name && plan?.amount) {
+      setForm((prevForm) => ({
+        ...prevForm,
+        planName: plan.name,
+        amount: plan.price,
+      }));
+    }
+  }, [plan]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (value == "UPI") {
+      setIsCard(false);
+    } else {
+      setIsCard(true);
+    }
+
+    setForm((prevForm) => ({
+      ...prevForm,
+      [name]: value,
+    }));
   };
 
-  const handlePlanClick = (e) => {
-    const planDiv = e.currentTarget;
-    const planName = planDiv.querySelector("span")?.textContent;
-    const price = planDiv.querySelector("button")?.textContent;
-
-    showToast(`You selected ${planName}`, "green");
-    document
-      .querySelectorAll(".amount")
-      .forEach((el) => (el.textContent = price));
-    document.getElementById("plan").textContent = planName;
+  const handleInChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prevForm) => ({
+      ...prevForm,
+      [name]: value,
+    }));
   };
-
-  const handleSubmitRecharge = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const planName = document.getElementById("plan").textContent;
-    const selectedMethod = document.querySelector(
-      'input[name="rechargeType"]:checked'
-    )?.value;
-
-    if (!planName || !selectedMethod) {
-      showToast("Please select a plan and payment method", "red");
+    if (!form.paymentMethod) {
+      showToast("Please select a payment method", "red");
       return;
     }
 
-    try {
-      const userRes = await axios.get(
-        `http://ec2-3-109-154-195.ap-south-1.compute.amazonaws.com:8080/users/${userMobile}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-
-      const planRes = await axios.get(
-        "http://ec2-3-109-154-195.ap-south-1.compute.amazonaws.com:8080/plans/search",
-        {
-          params: { value: planName },
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-
-      const userId = userRes.data.id;
-      const planId = planRes.data[0].id;
-
-      const response = await axios.post(
-        "http://ec2-3-109-154-195.ap-south-1.compute.amazonaws.com:8080/recharge",
-        {},
-        {
-          headers: { Authorization: `Bearer ${token}` },
-          params: {
-            userId,
-            planId,
-            paymentMethod: selectedMethod,
-          },
-        }
-      );
-
-      if (response.data === "Recharge successful!") {
-        showToast(response.data, "green");
-        setTimeout(() => location.reload(), 2000);
+    setSpin(true);
+    const response = await axios.post(
+      `${process.env.REACT_APP_API_URL}/recharge`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          userId: form.userId,
+          planId: form.planId,
+          paymentMethod: form.paymentMethod,
+          paymentDetails: form.paymentDetails,
+        },
       }
-    } catch (error) {
-      showToast("Recharge failed!", "red");
-      console.error("Recharge error:", error);
+    );
+
+    if (response.data != null) {
+      showToast("Recharge successful!", "green");
+      navigate("/success", {
+        state: {
+          data: response.data,
+        },
+      });
     }
   };
 
-  const handleProceed = () => {
-    document.querySelector(".main").classList.add("blured");
-    document.querySelector(".pop").classList.remove("hide");
-  };
-
-  const handleCategoryClick = async (e) => {
-    try {
-      const response = await axios.get(
-        `http://ec2-3-109-154-195.ap-south-1.compute.amazonaws.com:8080/plans/search?value=${e.target.value}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      setPlans(response.data);
-    } catch (err) {
-      console.error("Category fetch failed:", err);
-      showToast("Failed to fetch plans", "red");
-    }
-  };
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-gray-600 text-lg">Loading plan details...</p>
+      </div>
+    );
+  }
 
   return (
-    <div>
-      <div className="main min-h-screen bg-orange-500">
-        <div className="h-40 sm:h-56 w-full flex flex-col justify-center items-center font-black text-white relative">
-          <h1 className="text-xl sm:text-4xl">RECHARGE PLANS</h1>
-          <div className="flex gap-4 mt-4">
-            <button
-              onClick={() => navigate("/rechargehistory")}
-              className="bg-black text-sm sm:text-lg p-2 sm:p-3 rounded-lg sm:rounded-2xl"
-            >
-              Recharge history
-            </button>
-            <button
-              onClick={handleLogout}
-              className="bg-black text-sm sm:text-lg p-2 sm:p-3 rounded-lg sm:rounded-2xl"
-            >
-              Logout
-            </button>
-          </div>
-        </div>
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+      <div className="bg-white rounded-lg shadow-sm p-6 w-full max-w-md">
+        <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+          Mobile Recharge
+        </h1>
 
-        <div className="max-w-7xl mt-0 sm:mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="bg-white p-6 rounded-xl shadow-md flex flex-col gap-4">
-            <h2 className="text-md sm:text-xl font-black text-center">
-              Mobile Recharge
-            </h2>
-            <div className="text-md sm:text-lg font-semibold flex gap-2 px-2">
-              <input type="radio" name="type" id="prepaid" checked readOnly />
-              <label htmlFor="prepaid">Prepaid</label>
-            </div>
-            <div className="text-md sm:text-lg font-bold px-2 flex gap-3">
-              Name: <p className="font-normal">{userName}</p>
-            </div>
-            <div className="text-md sm:text-lg font-bold px-2 flex gap-3">
-              Number: <p className="font-normal">{userMobile}</p>
-            </div>
-            <div className="text-md sm:text-lg font-bold px-2 flex gap-3">
-              Amount: <p className="amount font-normal"></p>
-            </div>
-            <button
-              onClick={handleProceed}
-              className="bg-orange-400 rounded-lg font-black text-md sm:text-xl px-2 py-1 mt-3 text-gray-800 mb-4 w-1/2 sm:w-3/4 md:w-1/2 hover:scale-110 shadow-xl mx-auto"
-            >
-              Proceed
-            </button>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Name
+            </label>
+            <input
+              type="text"
+              name="name"
+              value={localStorage.getItem("name")}
+              readOnly
+              className="w-full p-2 border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed"
+              required
+            />
           </div>
 
-          <div className="md:col-span-2 bg-white p-6 rounded-xl shadow-md text-center">
-            <div className="flex justify-evenly pb-4">
-              {["POPULAR", "UNLIMITED", "DATA"].map((type) => (
-                <button
-                  key={type}
-                  onClick={handleCategoryClick}
-                  className="cursor-pointer text-sm sm:text-xl font-black"
-                  value={type}
-                >
-                  {type}
-                </button>
-              ))}
-            </div>
-
-            <div className="h-[280px] overflow-y-auto w-full flex flex-col gap-4 pr-2">
-              {plans.map((plan) => (
-                <div
-                  key={plan.id}
-                  onClick={handlePlanClick}
-                  className="flex flex-wrap md:flex-nowrap items-center justify-between gap-5 py-2 text-sm sm:text-lg border rounded-xl px-4 cursor-pointer"
-                >
-                  <span className="min-w-[100px] font-medium">{plan.name}</span>
-                  <span className="flex-1 text-gray-600">
-                    {plan.description}
-                  </span>
-                  <span className="text-sm text-gray-500">
-                    Validity: {plan.validityInDays} days
-                  </span>
-                  <button className="border-2 px-4 py-2 rounded-xl whitespace-nowrap">
-                    Rs.{plan.price}
-                  </button>
-                </div>
-              ))}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Mobile Number
+            </label>
+            <div className="flex">
+              <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
+                +91
+              </span>
+              <input
+                type="text"
+                name="mobile"
+                value={localStorage.getItem("mobile")}
+                readOnly
+                className="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 bg-gray-100 cursor-not-allowed"
+                maxLength="10"
+                required
+              />
             </div>
           </div>
-        </div>
-      </div>
 
-      <div className="hide pop min-h-screen">
-        <div className="pops proceed flex flex-col gap-4">
-          <h1 className="text-lg sm:text-2xl font-black text-orange-500">
-            RECHARGE
-          </h1>
-          <p className="text-md sm:text-lg font-bold px-2">
-            Name: <span className="font-normal">{userName}</span>
-          </p>
-          <p className="text-md sm:text-lg font-bold px-2">
-            Number: <span className="font-normal">{userMobile}</span>
-          </p>
-          <p className="text-sm sm:text-lg font-bold px-2">
-            Plan: <span className="font-normal" id="plan"></span>
-          </p>
-          <p className="text-md sm:text-lg font-bold px-2">
-            Amount: <span className="amount font-normal"></span>
-          </p>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Plan Name
+            </label>
+            <input
+              type="text"
+              name="planName"
+              value={plan.name}
+              readOnly
+              className="w-full p-2 border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed"
+              required
+            />
+          </div>
 
-          <form
-            onSubmit={handleSubmitRecharge}
-            className="flex flex-col sm:gap-3"
-          >
-            <div className="flex flex-row gap-3">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Amount (₹)
+            </label>
+            <input
+              type="number"
+              name="amount"
+              value={plan.price}
+              readOnly
+              className="w-full p-2 border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Payment Method *
+            </label>
+            <div className="space-y-2">
               {["UPI", "CREDIT_CARD", "DEBIT_CARD"].map((method) => (
-                <label
-                  key={method}
-                  className="flex items-center gap-2 font-bold"
-                >
-                  <input type="radio" name="rechargeType" value={method} />
-                  {method.replace("_", " ")}
+                <label key={method} className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value={method}
+                    onChange={handleChange}
+                    checked={form.paymentMethod === method}
+                    className="h-4 w-4 text-blue-600 focus:ring-blue-500"
+                  />
+                  <span>{method.replace("_", " ")}</span>
                 </label>
               ))}
             </div>
-            <button
-              type="submit"
-              className="bg-orange-400 rounded-lg font-black text-md sm:text-xl px-2 py-1 mt-3 text-gray-800 mb-4 w-1/2 sm:w-3/4 md:w-1/2 hover:scale-110 shadow-xl mx-auto"
-            >
-              Continue
-            </button>
-          </form>
-        </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Payment Details
+            </label>
+            <input
+              type="text"
+              name="paymentDetails"
+              onChange={handleInChange}
+              value={form.paymentDetails}
+              placeholder={
+                isCard ? "Enter Your Card number" : "Enter Your UPI Id"
+              }
+              className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              required
+            />
+          </div>
+          <div className={`${isCard ? " " : "hidden"} space-y-4`}>
+            <div>
+              <label
+                htmlFor="expiryDate"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Expiry Date *
+              </label>
+              <input
+                type="month"
+                id="expiryDate"
+                name="expiryDate"
+                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="cvv"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                CVV *
+              </label>
+              <input
+                type="text"
+                id="cvv"
+                name="cvv"
+                maxLength="3"
+                pattern="\d{3}"
+                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mt-4"
+          >
+            Proceed to Pay
+          </button>
+        </form>
       </div>
+      {spin && (
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gray-100 bg-opacity-30">
+          <div
+            className="w-20 h-20 border-4 border-blue-500 border-dashed rounded-full animate-spin"
+            style={{ animationDuration: "6s" }}
+          ></div>
+          <p className="mt-4 text-gray-900 text-lg animate-bounce">
+            On Processing...
+          </p>
+        </div>
+      )}
     </div>
   );
 };
